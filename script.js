@@ -5,7 +5,7 @@ const context = canvas.getContext('2d');
 
 const width = 500;
 const height = 700;
-const screenWidth = window.screen.width;
+const screenWidth = body.clientWidth;
 const canvasPosition = screenWidth / 2 - width / 2;
 const isMobile = window.matchMedia('(max-width: 600px)');
 const gameOverEl = document.createElement('div');
@@ -45,8 +45,8 @@ if (isMobile.matches) {
 let playerScore = 0;
 let computerScore = 0;
 const winningScore = 7;
-// let isGameOver = true;
-// let isNewGame = true;
+let isGameOver = true;
+let isNewGame = true;
 
 // Render Everything on Canvas
 function renderCanvas() {
@@ -91,8 +91,6 @@ function createCanvas() {
   renderCanvas();
 }
 
-// Remove this
-createCanvas();
 
 // Reset Ball to Center
 function ballReset() {
@@ -206,10 +204,15 @@ function gameOver() {
 // Called Every Frame
 function animate() {
   renderCanvas();
+  // Control the speed of the ball when moving
   ballMove();
+  // When the ball makes contact with paddle or walls, bounce off
+  // and change directions
+  // Also tracks if ball passes bottom or top of the container
   ballBoundaries();
+  //
   computerAI();
-  
+  window.requestAnimationFrame(animate);
 }
 
 // Start Game, Reset Everything
@@ -218,15 +221,14 @@ function startGame() {
 
 
   // }
-  // isGameOver = ;
-  // isNewGame = ;
+  // isGameOver = false;
+  // isNewGame = true;
   playerScore = 0;
   computerScore = 0;
   ballReset();
   createCanvas();
   animate();
   canvas.addEventListener('mousemove', (e) => {
-    console.log(e.clientX);
     playerMoved = true;
     // Compensate for canvas being centered
     paddleBottomX = e.clientX - canvasPosition - paddleDiff;
@@ -242,4 +244,4 @@ function startGame() {
 }
 
 // On Load
-// startGame();
+startGame();
