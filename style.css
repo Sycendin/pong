@@ -1,16 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 body {
   margin: 0;
   background-color: rgb(39, 39, 39);
   display: flex;
   justify-content: center;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Roboto", "Courier New", Courier, monospace;
 }
 
-canvas {
+.canvas-pong {
   margin-top: 25px;
   z-index: 10;
 }
-
+.space {
+  margin-top: 300px;
+}
+.jscolor {
+  border-style: solid;
+  border-radius: 5px;
+  height: 35px;
+  width: 120px;
+  margin-left: 3px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+}
 .game-over-container {
   position: absolute;
   top: 50%;
@@ -37,7 +50,7 @@ button {
   width: 200px;
   border-radius: 5px;
   font-size: 20px;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Roboto", "Courier New", Courier, monospace;
 }
 
 button:hover {
