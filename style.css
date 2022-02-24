@@ -16,7 +16,16 @@ body {
   z-index: 10;
 }
 .space {
-  margin-top: 300px;
+  margin-top: 100px;
+}
+
+.game-over-btns {
+  display: flex;
+  justify-content: center;
+}
+.text-input {
+  display: flex;
+  text-align: center;
 }
 .small-space {
   margin-top: 50px;
@@ -72,6 +81,30 @@ button:focus {
   outline: none;
 }
 
+.difficulty-btns {
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+  background-color: rgb(195, 195, 195);
+  border: none;
+  height: 50px;
+  width: 100px;
+  border-radius: 5px;
+  font-size: 15px;
+  font-family: "Roboto", "Courier New", Courier, monospace;
+  margin-right: 10px;
+}
+
+.difficulty-btns:hover {
+  filter: brightness(80%);
+}
+
+.difficulty-btns:active {
+  transform: scale(0.95);
+}
+
+.difficulty-btns:focus {
+  outline: none;
+}
 /* Montior and Larger */
 @media screen and (min-width: 1800px) {
   canvas {

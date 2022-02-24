@@ -20,9 +20,13 @@ const audioLose = document.querySelector(".audioLose");
 // Color
 const color = document.createElement("input");
 const ballColorSelect = document.createElement("input");
+color.value = "26AB9D";
+ballColorSelect.value = "FFFFFF";
+// winning
+const winningSelect = document.createElement("input");
 // Paddle
 const paddleHeight = 10;
-const paddleWidth = 50;
+let paddleWidth = 50;
 const paddleDiff = 25;
 let paddleBottomX = 225;
 let paddleTopX = 225;
@@ -56,13 +60,24 @@ if (isMobile.matches) {
 // Score
 let playerScore = 0;
 let computerScore = 0;
-const winningScore = 2;
+let winningScore = 1;
 let isGameOver = true;
 let isNewGame = true;
 let select = true;
+let backToStart = false;
+
+// Dificulty
+let difficulty = "normal";
 
 // Render Everything on Canvas
 const renderCanvas = () => {
+  difficulty === "easy"
+    ? (paddleWidth = 70)
+    : difficulty === "normal"
+    ? (paddleWidth = 50)
+    : difficulty === "hard"
+    ? (paddleWidth = 30)
+    : null;
   // console.log(paddleColor);
   // Canvas Background
   contextPong.fillStyle = "black";
@@ -211,9 +226,18 @@ const showGameOverEl = (winner) => {
   const playAgainBtn = document.createElement("button");
   playAgainBtn.setAttribute("onclick", `startGame()`);
   playAgainBtn.textContent = "Play Again";
+  playAgainBtn.classList.add("difficulty-btns");
+  const startMenuBtn = document.createElement("button");
+  startMenuBtn.setAttribute("onclick", `startMenu()`);
+  startMenuBtn.textContent = "Start Menu";
+  startMenuBtn.classList.add("difficulty-btns");
+  const btnDiv = document.createElement("div");
+  btnDiv.classList.add("game-over-btns");
   // // Append
   gameOverEl.appendChild(title);
-  gameOverEl.appendChild(playAgainBtn);
+  btnDiv.appendChild(playAgainBtn);
+  btnDiv.appendChild(startMenuBtn);
+  gameOverEl.appendChild(btnDiv);
   body.appendChild(gameOverEl);
   playerMoved = false;
 };
@@ -248,6 +272,10 @@ const animate = () => {
 
 // Start Game, Reset Everything
 const startGame = () => {
+  if (body.contains(startScreen)) {
+    body.removeChild(startScreen);
+    canvasPong.hidden = false;
+  }
   winning.textContent = "";
   winning.width = width;
   winning.height = 206;
@@ -264,9 +292,6 @@ const startGame = () => {
   // After showGameEl is run
   if (isGameOver && !isNewGame) {
     body.removeChild(gameOverEl);
-    canvasPong.hidden = false;
-  } else if (select) {
-    body.removeChild(startScreen);
     canvasPong.hidden = false;
   }
   select = false;
@@ -292,60 +317,115 @@ const startGame = () => {
   });
 };
 
-const colorset = () => {
+const colorSet = () => {
   paddleColor = `#${color.value}`;
   ballColor = `#${ballColorSelect.value}`;
+  if (!isNaN(winningSelect.value)) {
+    winningScore = parseInt(winningSelect.value);
+  }
 };
-// On Load
+// Sets the difficulty setting based on button selected
+const dificultySetting = (setting) => {
+  if (setting === "easy") {
+    difficulty = "easy";
+  } else if (setting === "normal") {
+    difficulty = "normal";
+  } else {
+    difficulty = "hard";
+  }
+};
+// On Load render startmenu to pick colors
 const startMenu = () => {
   canvasPong.hidden = true;
+
+  // Clear startscreen
   startScreen.textContent = "";
   startScreen.classList.add("game-over-container");
   const text = document.createElement("h1");
   text.textContent = "Select Paddle Color";
+
   // // Container
   gameOverEl.textContent = "";
   gameOverEl.classList.add("game-over-container");
-  // // Title
-  // const title = document.createElement("h1");
-  // title.textContent = `Choose color`;
+
+  // Set paddle color
   color.classList.add("jscolor");
-  color.value = "26AB9D";
+
   color.id = "paddle-color";
-  // // Button
-  const startButton = document.createElement("button");
   color.setAttribute(
     "onchange",
-    `colorset('${window.getComputedStyle(color).backgroundColor}')`
+    `colorSet('${window.getComputedStyle(color).backgroundColor}')`
   );
+
+  // small space
+  const smallSpace = document.createElement("div");
+  smallSpace.classList.add("small-space");
+
+  // Set ball color
   const ballColorText = document.createElement("h1");
   ballColorText.textContent = "Select Ball Color Color";
   ballColorSelect.classList.add("jscolor");
-  ballColorSelect.value = "FFFFFF";
   ballColorSelect.id = "paddle-color";
   // // Button
   ballColorSelect.setAttribute(
     "onchange",
-    `colorset('${window.getComputedStyle(ballColorSelect).backgroundColor}')`
+    `colorSet('${window.getComputedStyle(ballColorSelect).backgroundColor}')`
   );
+
+  const winningSelectText = document.createElement("h1");
+  winningSelectText.textContent = "Select Winning score";
+  winningSelect.classList.add("text-input");
+  winningSelect.setAttribute("onchange", `colorSet('${winningSelect.value}')`);
+
+  const difficultyText = document.createElement("h1");
+  difficultyText.textContent = "Select Difficulty";
+
+  const buttonDiv = document.createElement("div");
+  buttonDiv.classList.add("game-over-btns");
+
+  const easybutton = document.createElement("button");
+  easybutton.setAttribute("onclick", `dificultySetting('easy')`);
+  easybutton.textContent = "Easy";
+  easybutton.classList.add("difficulty-btns");
+
+  const normalButton = document.createElement("button");
+  normalButton.setAttribute("onclick", `dificultySetting('normal')`);
+  normalButton.textContent = "Normal";
+  normalButton.classList.add("difficulty-btns");
+
+  const hardButton = document.createElement("button");
+  hardButton.setAttribute("onclick", `dificultySetting('hard')`);
+  hardButton.textContent = "Hard";
+  hardButton.classList.add("difficulty-btns");
+  // Large space
+  const space = document.createElement("div");
+  space.classList.add("space");
+  // Button
+  const startButton = document.createElement("button");
   startButton.setAttribute("onclick", `startGame()`);
   startButton.textContent = "Start Game";
-  const space = document.createElement("div");
-  const smallSpace = document.createElement("div");
-  smallSpace.classList.add("small-space");
-  space.classList.add("space");
-
-  // // Append
+  // Append
   startScreen.appendChild(text);
   startScreen.append(color);
-  startScreen.append(smallSpace);
+
   startScreen.appendChild(ballColorText);
   startScreen.append(ballColorSelect);
+
+  startScreen.append(winningSelectText);
+  startScreen.append(winningSelect);
+
+  startScreen.append(difficultyText);
+  buttonDiv.append(easybutton);
+  buttonDiv.append(normalButton);
+  buttonDiv.append(hardButton);
+  startScreen.append(buttonDiv);
+
   startScreen.append(space);
 
   startScreen.append(startButton);
 
   body.appendChild(startScreen);
+  particles = [];
 };
+// On load, display startMenu
 startMenu();
-// startGame();
