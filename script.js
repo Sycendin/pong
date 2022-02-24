@@ -11,11 +11,15 @@ const canvasPosition = screenWidth / 2 - width / 2;
 const isMobile = window.matchMedia("(max-width: 600px)");
 const gameOverEl = document.createElement("div");
 const startScreen = document.createElement("div");
+const winning = document.createElement("div");
 
 // Audio
 const audioWin = document.querySelector(".audioWin");
 const audioLose = document.querySelector(".audioLose");
 
+// Color
+const color = document.createElement("input");
+const ballColorSelect = document.createElement("input");
 // Paddle
 const paddleHeight = 10;
 const paddleWidth = 50;
@@ -30,6 +34,7 @@ let paddleColor = "#26AB9D";
 let ballX = 250;
 let ballY = 350;
 const ballRadius = 5;
+let ballColor = "#FFFFFF";
 
 // Speed
 let speedY;
@@ -83,7 +88,7 @@ const renderCanvas = () => {
   // Ball
   contextPong.beginPath();
   contextPong.arc(ballX, ballY, ballRadius, 2 * Math.PI, false);
-  contextPong.fillStyle = "white";
+  contextPong.fillStyle = ballColor;
   contextPong.fill();
 
   // Score
@@ -135,6 +140,7 @@ const ballBoundaries = () => {
       // Add Speed on Hit
       if (playerMoved) {
         speedY -= 1;
+        // speedY -= 1;
         // Max Speed
         if (speedY < -5) {
           speedY = -5;
@@ -156,6 +162,8 @@ const ballBoundaries = () => {
       // Add Speed on Hit
       if (playerMoved) {
         speedY += 1;
+        // speedY += 1;
+
         // Max Speed
         if (speedY > 5) {
           speedY = 5;
@@ -182,6 +190,7 @@ const computerAI = () => {
 };
 
 const showGameOverEl = (winner) => {
+  body.removeChild(winning);
   // Play victory audio if player wins
   // otherwise play losing sound
   if (winner === "Player") {
@@ -197,7 +206,7 @@ const showGameOverEl = (winner) => {
   gameOverEl.classList.add("game-over-container");
   // // Title
   const title = document.createElement("h1");
-  title.textContent = `${winner} Wins!`;
+  title.textContent = `${winner} Won!`;
   // // Button
   const playAgainBtn = document.createElement("button");
   playAgainBtn.setAttribute("onclick", `startGame()`);
@@ -239,6 +248,16 @@ const animate = () => {
 
 // Start Game, Reset Everything
 const startGame = () => {
+  winning.textContent = "";
+  winning.width = width;
+  winning.height = 206;
+  winning.classList.add("winning-div");
+
+  const text = document.createElement("h1");
+  text.textContent = `Score ${winningScore} To Win`;
+  text.style.color = "white";
+  winning.appendChild(text);
+  body.appendChild(winning);
   // paddleColor = pColor;
   // contextPong.fillStyle = paddleColor;
   removeConfetti();
@@ -275,41 +294,58 @@ const startGame = () => {
 
 const colorset = () => {
   paddleColor = `#${color.value}`;
+  ballColor = `#${ballColorSelect.value}`;
 };
 // On Load
+const startMenu = () => {
+  canvasPong.hidden = true;
+  startScreen.textContent = "";
+  startScreen.classList.add("game-over-container");
+  const text = document.createElement("h1");
+  text.textContent = "Select Paddle Color";
+  // // Container
+  gameOverEl.textContent = "";
+  gameOverEl.classList.add("game-over-container");
+  // // Title
+  // const title = document.createElement("h1");
+  // title.textContent = `Choose color`;
+  color.classList.add("jscolor");
+  color.value = "26AB9D";
+  color.id = "paddle-color";
+  // // Button
+  const startButton = document.createElement("button");
+  color.setAttribute(
+    "onchange",
+    `colorset('${window.getComputedStyle(color).backgroundColor}')`
+  );
+  const ballColorText = document.createElement("h1");
+  ballColorText.textContent = "Select Ball Color Color";
+  ballColorSelect.classList.add("jscolor");
+  ballColorSelect.value = "FFFFFF";
+  ballColorSelect.id = "paddle-color";
+  // // Button
+  ballColorSelect.setAttribute(
+    "onchange",
+    `colorset('${window.getComputedStyle(ballColorSelect).backgroundColor}')`
+  );
+  startButton.setAttribute("onclick", `startGame()`);
+  startButton.textContent = "Start Game";
+  const space = document.createElement("div");
+  const smallSpace = document.createElement("div");
+  smallSpace.classList.add("small-space");
+  space.classList.add("space");
 
-canvasPong.hidden = true;
-startScreen.textContent = "";
-startScreen.classList.add("game-over-container");
-const text = document.createElement("h1");
-text.textContent = "Select Paddle Color";
-// // Container
-gameOverEl.textContent = "";
-gameOverEl.classList.add("game-over-container");
-// // Title
-// const title = document.createElement("h1");
-// title.textContent = `Choose color`;
-const color = document.createElement("input");
-color.classList.add("jscolor");
-color.value = "26AB9D";
-color.id = "paddle-color";
-// // Button
-const startButton = document.createElement("button");
-color.setAttribute(
-  "onchange",
-  `colorset('${window.getComputedStyle(color).backgroundColor}')`
-);
-startButton.setAttribute("onclick", `startGame()`);
-startButton.textContent = "Start Game";
-const space = document.createElement("div");
-space.classList.add("space");
+  // // Append
+  startScreen.appendChild(text);
+  startScreen.append(color);
+  startScreen.append(smallSpace);
+  startScreen.appendChild(ballColorText);
+  startScreen.append(ballColorSelect);
+  startScreen.append(space);
 
-// // Append
-startScreen.appendChild(text);
-startScreen.append(color);
-startScreen.append(space);
-startScreen.append(startButton);
-// gameOverEl.appendChild(playAgainBtn);
-body.appendChild(startScreen);
+  startScreen.append(startButton);
 
+  body.appendChild(startScreen);
+};
+startMenu();
 // startGame();

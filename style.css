@@ -2,17 +2,24 @@
 body {
   margin: 0;
   background-color: rgb(39, 39, 39);
+  width: 100%;
   display: flex;
   justify-content: center;
   font-family: "Roboto", "Courier New", Courier, monospace;
 }
-
+.winning-div {
+  position: absolute;
+  bottom: 0px;
+}
 .canvas-pong {
   margin-top: 25px;
   z-index: 10;
 }
 .space {
   margin-top: 300px;
+}
+.small-space {
+  margin-top: 50px;
 }
 .jscolor {
   border-style: solid;
